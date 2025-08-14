@@ -98,10 +98,10 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
   });
   
   // Use appropriate schema based on current step
-  let finalSchema: z.ZodTypeAny;
+  let finalSchema: z.ZodSchema<any>;
   if (currentStep === 1) {
     // Step 1: Aadhaar verification - use schema step 1
-    finalSchema = currentStepSchema;
+    finalSchema = currentStepSchema || z.object({});
   } else if (currentStep === 2) {
     // Step 2: OTP verification
     finalSchema = otpSchema;
@@ -125,7 +125,8 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
     setValue,
     reset
   } = useForm({
-    resolver: zodResolver(finalSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(finalSchema as any),
     mode: 'onChange'
   });
 
@@ -236,7 +237,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
 
   // Render field based on type
   const renderField = (field: FormField) => {
-    const fieldError = errors[field.name as keyof typeof errors] as any;
+    const fieldError = errors[field.name as string] as any;
     
     switch (field.type) {
       case 'select':
@@ -351,7 +352,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
                       key={field.name}
                       field={field}
                       control={control}
-                      error={errors[field.name as keyof typeof errors] as any}
+                      error={errors[field.name as string] as any}
                     />
                   );
                 case 'select':
@@ -360,7 +361,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
                       key={field.name}
                       field={field}
                       control={control}
-                      error={errors[field.name as keyof typeof errors] as any}
+                      error={errors[field.name as string] as any}
                     />
                   );
                 default:
@@ -398,7 +399,9 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
                   maxLength={10}
                 />
                 {errors.pan && (
-                  <p className="text-red-600 text-sm mt-1">{errors.pan.message}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {typeof errors.pan.message === 'string' ? errors.pan.message : 'Invalid input'}
+                  </p>
                 )}
               </div>
 
@@ -423,7 +426,9 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
                   <option value="10">10. Other / अन्य</option>
                 </select>
                 {errors.businessType && (
-                  <p className="text-red-600 text-sm mt-1">{errors.businessType.message}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {typeof errors.businessType.message === 'string' ? errors.businessType.message : 'Invalid input'}
+                  </p>
                 )}
               </div>
 
@@ -438,7 +443,9 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
                   placeholder="Enter name as per PAN"
                 />
                 {errors.aadhaarName && (
-                  <p className="text-red-600 text-sm mt-1">{errors.aadhaarName.message}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {typeof errors.aadhaarName.message === 'string' ? errors.aadhaarName.message : 'Invalid input'}
+                  </p>
                 )}
               </div>
 
@@ -452,7 +459,9 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {errors.dateOfBirth && (
-                  <p className="text-red-600 text-sm mt-1">{errors.dateOfBirth.message}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {typeof errors.dateOfBirth.message === 'string' ? errors.dateOfBirth.message : 'Invalid input'}
+                  </p>
                 )}
               </div>
               
@@ -480,21 +489,21 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
                 switch (field.type) {
                   case 'text':
                     return (
-                      <TextField
-                        key={field.name}
-                        field={field}
-                        control={control}
-                        error={errors[field.name as keyof typeof errors] as any}
-                      />
+                                              <TextField
+                          key={field.name}
+                          field={field}
+                          control={control}
+                          error={errors[field.name as string] as any}
+                        />
                     );
                   case 'select':
                     return (
-                      <SelectField
-                        key={field.name}
-                        field={field}
-                        control={control}
-                        error={errors[field.name as keyof typeof errors] as any}
-                      />
+                                              <SelectField
+                          key={field.name}
+                          field={field}
+                          control={control}
+                          error={errors[field.name as string] as any}
+                        />
                     );
                   default:
                     return null;
