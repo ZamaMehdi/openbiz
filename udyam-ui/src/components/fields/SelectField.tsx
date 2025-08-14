@@ -10,8 +10,6 @@ interface SelectFieldProps {
 }
 
 const SelectField: React.FC<SelectFieldProps> = ({ field, control, error, className = '' }) => {
-  console.log('SelectField rendering:', field.name, 'options:', field.options);
-  
   if (!field.options || field.options.length === 0) {
     console.warn(`SelectField: No options provided for field ${field.name}`);
     return null;

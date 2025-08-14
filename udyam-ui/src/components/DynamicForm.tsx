@@ -57,29 +57,20 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
   const getCurrentStepData = () => {
     if (currentStep === 2) {
       // Step 2 is OTP verification - no schema needed
-      console.log('Step 2 - OTP verification, no schema needed');
       return null;
     } else if (currentStep === 3) {
       // Step 3 is PAN verification - no schema needed
-      console.log('Step 3 - PAN verification, no schema needed');
       return null;
     } else if (currentStep === 4) {
       const businessData = schema.forms.find(form => form.step === 2);
-      console.log('Step 4 - Using business data:', businessData);
       return businessData;
     }
-    console.log(`Step ${currentStep} - Using step data:`, currentStepData);
     return currentStepData;
   };
   
   const actualStepData = getCurrentStepData();
   
-  // Debug logging for step progression
-  useEffect(() => {
-    console.log(`Current step: ${currentStep}`);
-    console.log(`Step data:`, actualStepData);
-    console.log(`Schema forms:`, schema.forms);
-  }, [currentStep, actualStepData, schema.forms]);
+
   
   // Create Zod schema for current step
   const currentStepSchema = currentStepData ? stepToZodSchema(currentStepData) : z.object({});
@@ -130,10 +121,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
     mode: 'onChange'
   });
 
-  // Debug form validation state
-  useEffect(() => {
-    console.log(`Form validation state for step ${currentStep}:`, { isValid, errors });
-  }, [currentStep, isValid, errors]);
+
 
   // Reset form on step change
   useEffect(() => {
@@ -165,7 +153,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
             setValue('state', result.state);
           }
         } catch (error) {
-          console.log('Pincode lookup failed:', error);
+          // Pincode lookup failed silently
         }
       };
       
@@ -184,9 +172,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
     try {
       if (currentStep === 1) {
         // Step 1: Aadhaar verification
-        console.log('Debug - Step 1 data received:', data);
         const response = await registrationAPI.submitStep1(data);
-        console.log('Debug - Step 1 API response:', response);
         setStep1Data(data);
         setRegistrationId(response.data.registrationId);
         setIsOtpEnabled(true);
@@ -194,7 +180,6 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
         setCurrentStep(2); // Move to OTP verification
       } else if (currentStep === 2) {
         // Step 2: OTP verification
-        console.log('Debug - OTP verification data:', data);
         const response = await registrationAPI.verifyOtp({
           aadhaar: step1Data.aadhaar,
           otp: data.otp
@@ -204,7 +189,6 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
         reset(); // Reset form for PAN step
       } else if (currentStep === 3) {
         // Step 3: PAN verification
-        console.log('Debug - PAN verification data:', data);
         const response = await registrationAPI.verifyPan(data);
         if (response.success) {
           setPanData(response.data);
@@ -223,7 +207,6 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
         }
       } else if (currentStep === 4) {
         // Step 4: Business details
-        console.log('Debug - Business details data:', data);
         const step4Data = {
           ...data,
           registrationId: registrationId
@@ -482,10 +465,8 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
             // Step 4: Business details - render from schema step 2
             (() => {
               const businessStepData = schema.forms.find(form => form.step === 2);
-              console.log('Step 4 - Business fields to render:', businessStepData?.fields);
               
               return businessStepData?.fields?.map((field: FormField) => {
-                console.log('Rendering field:', field.name, field.type);
                 // Pre-fill some fields if we have the data
                 let defaultValue = '';
                 if (field.name === 'businessType' && step1Data.businessType) {
@@ -516,7 +497,6 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
                       />
                     );
                   default:
-                    console.log('Unknown field type:', field.type, 'for field:', field.name);
                     return null;
                 }
               });

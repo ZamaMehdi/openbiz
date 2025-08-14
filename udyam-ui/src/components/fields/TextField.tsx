@@ -13,8 +13,6 @@ const TextField: React.FC<TextFieldProps> = ({ field, control, error, className 
   const isTextarea = field.type === 'textarea';
   const isEmail = field.type === 'email';
   const Component = isTextarea ? 'textarea' : 'input';
-  
-  console.log('TextField rendering:', field.name, field.type, { isTextarea, isEmail });
 
   return (
     <div className={`mb-4 ${className}`}>
