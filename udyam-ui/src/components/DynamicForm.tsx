@@ -130,6 +130,11 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
     mode: 'onChange'
   });
 
+  // Debug form validation state
+  useEffect(() => {
+    console.log(`Form validation state for step ${currentStep}:`, { isValid, errors });
+  }, [currentStep, isValid, errors]);
+
   // Reset form on step change
   useEffect(() => {
     if (currentStep === 2 || currentStep === 3 || currentStep === 4) {
@@ -541,7 +546,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
 
             <button
               type="submit"
-              disabled={!isValid || isLoading}
+              disabled={isLoading}
               className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             >
               {isLoading ? 'Processing...' : (
