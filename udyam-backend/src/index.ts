@@ -13,8 +13,13 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  credentials: true
+  origin: [
+    process.env.CORS_ORIGIN || 'http://localhost:3000',
+    'https://openbizregistration.netlify.app',
+    'https://openbizregistration.netlify.app/*'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 
 app.use(express.json({ limit: '10mb' }));

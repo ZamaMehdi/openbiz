@@ -4,14 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { 
   FormField, 
-  FormStep, 
   UdyamSchema, 
   stepToZodSchema 
 } from '@/lib/validation';
 import { 
   registrationAPI, 
-  pincodeAPI, 
-  mockOtpAPI 
+  pincodeAPI
 } from '@/lib/api';
 import TextField from './fields/TextField';
 import SelectField from './fields/SelectField';
@@ -23,14 +21,32 @@ interface DynamicFormProps {
   className?: string;
 }
 
+interface StepData {
+  aadhaar?: string;
+  aadhaarName?: string;
+  businessType?: string;
+  dateOfBirth?: string;
+}
+
+interface PanData {
+  pan: string;
+  name: string;
+  dateOfBirth: string;
+  type: string;
+  status: string;
+  verified: boolean;
+}
+
 const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [step1Data, setStep1Data] = useState<any>(null);
   const [registrationId, setRegistrationId] = useState<string | null>(null);
   const [isOtpEnabled, setIsOtpEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [panData, setPanData] = useState<any>(null);
   const [isPanVerified, setIsPanVerified] = useState(false);
 
@@ -82,7 +98,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
   });
   
   // Use appropriate schema based on current step
-  let finalSchema;
+  let finalSchema: z.ZodTypeAny;
   if (currentStep === 1) {
     // Step 1: Aadhaar verification - use schema step 1
     finalSchema = currentStepSchema;
