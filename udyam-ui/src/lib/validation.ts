@@ -36,18 +36,18 @@ export function fieldToZodSchema(field: FormField): z.ZodTypeAny {
     case 'textarea':
       schema = z.string().min(1, `${field.label} is required`);
       if (field.maxlength) {
-        schema = schema.max(field.maxlength, `${field.label} must be at most ${field.maxlength} characters`);
+        schema = (schema as z.ZodString).max(field.maxlength, `${field.label} must be at most ${field.maxlength} characters`);
       }
       if (field.pattern) {
         const regex = new RegExp(field.pattern);
-        schema = schema.regex(regex, `${field.label} format is invalid`);
+        schema = (schema as z.ZodString).regex(regex, `${field.label} format is invalid`);
       }
       break;
 
     case 'email':
       schema = z.string().email(`${field.label} must be a valid email address`);
       if (field.maxlength) {
-        schema = schema.max(field.maxlength, `${field.label} must be at most ${field.maxlength} characters`);
+        schema = (schema as z.ZodString).max(field.maxlength, `${field.label} must be at most ${field.maxlength} characters`);
       }
       break;
 
@@ -55,7 +55,7 @@ export function fieldToZodSchema(field: FormField): z.ZodTypeAny {
       schema = z.string().min(1, `${field.label} is required`);
       if (field.pattern) {
         const regex = new RegExp(field.pattern);
-        schema = schema.regex(regex, `${field.label} format is invalid`);
+        schema = (schema as z.ZodString).regex(regex, `${field.label} format is invalid`);
       }
       break;
 
