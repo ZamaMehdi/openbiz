@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Registration {
+  id            String   @id @default(cuid())
+  aadhaar       String   @unique // Encrypted Aadhaar number
+  aadhaarName   String   // Name as per Aadhaar
+  mobile        String   // Mobile number
+  businessName  String?  // Business name
+  businessType  String?  // Type of business
+  pan           String?  // Encrypted PAN number
+  pincode       String?  // PIN code
+  city          String?  // City
+  state         String?  // State
+  address       String?  // Complete address
+  email         String?  // Email address
+  
+  // Status tracking
+  step1Completed Boolean @default(false)
+  otpVerified    Boolean @default(false)
+  step2Completed Boolean @default(false)
+  isActive       Boolean @default(true)
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // OTP tracking
+  otpAttempts   Int      @default(0)
+  lastOtpSent   DateTime?
+  
+  // Audit fields
+  createdBy     String?  // IP address or user identifier
+  updatedBy     String?  // IP address or user identifier
+  
+  @@map("registrations")
+}
+
+model OtpLog {
+  id          String   @id @default(cuid())
+  aadhaar     String   // Encrypted Aadhaar number
+  mobile      String   // Mobile number
+  otp         String   // Hashed OTP
+  attempts    Int      @default(0)
+  isUsed      Boolean  @default(false)
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  
+  @@map("otp_logs")
+}
+
+model PincodeData {
+  id       String @id @default(cuid())
+  pincode  String @unique
+  city     String
+  state    String
+  district String?
+  country  String @default("India")
+  
+  @@map("pincode_data")
+}
+

@@ -1,0 +1,28 @@
+{
+  "name": "udyam-scraper",
+  "version": "1.0.0",
+  "description": "Puppeteer scraper for Udyam registration form schema",
+  "main": "dist/puppeteer-scrape.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/puppeteer-scrape.js",
+    "dev": "ts-node src/puppeteer-scrape.ts",
+    "scrape": "ts-node src/puppeteer-scrape.ts"
+  },
+  "dependencies": {
+    "puppeteer": "^21.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "typescript": "^5.2.0",
+    "ts-node": "^10.9.0"
+  },
+  "keywords": ["puppeteer", "scraping", "udyam", "form-schema"],
+  "author": "",
+  "license": "MIT"
+}
+
+
+
+
+
