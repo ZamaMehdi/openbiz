@@ -42,7 +42,7 @@ const SelectField: React.FC<SelectFieldProps> = ({ field, control, error, classN
             `}
           >
             <option value="">Select {field.label.toLowerCase()}</option>
-            {field.options.map((option, index) => (
+            {field.options?.map((option, index) => (
               <option key={index} value={option}>
                 {option}
               </option>
