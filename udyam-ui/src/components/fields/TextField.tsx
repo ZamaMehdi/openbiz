@@ -11,7 +11,10 @@ interface TextFieldProps {
 
 const TextField: React.FC<TextFieldProps> = ({ field, control, error, className = '' }) => {
   const isTextarea = field.type === 'textarea';
+  const isEmail = field.type === 'email';
   const Component = isTextarea ? 'textarea' : 'input';
+  
+  console.log('TextField rendering:', field.name, field.type, { isTextarea, isEmail });
 
   return (
     <div className={`mb-4 ${className}`}>
@@ -30,7 +33,7 @@ const TextField: React.FC<TextFieldProps> = ({ field, control, error, className 
           <Component
             id={field.id}
             ref={ref}
-            type={field.type === 'textarea' ? undefined : field.type}
+            type={isTextarea ? undefined : (isEmail ? 'email' : field.type)}
             value={value || ''}
             onChange={onChange}
             onBlur={onBlur}
