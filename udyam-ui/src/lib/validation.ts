@@ -61,9 +61,7 @@ export function fieldToZodSchema(field: FormField): z.ZodTypeAny {
 
     case 'select':
       if (field.options && field.options.length > 0) {
-        schema = z.enum(field.options as [string, ...string[]], {
-          errorMap: () => ({ message: `Please select a valid ${field.label.toLowerCase()}` })
-        });
+        schema = z.enum(field.options as [string, ...string[]]);
       } else {
         schema = z.string().min(1, `${field.label} is required`);
       }
