@@ -482,7 +482,10 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
             // Step 4: Business details - render from schema step 2
             (() => {
               const businessStepData = schema.forms.find(form => form.step === 2);
+              console.log('Step 4 - Business fields to render:', businessStepData?.fields);
+              
               return businessStepData?.fields?.map((field: FormField) => {
+                console.log('Rendering field:', field.name, field.type);
                 // Pre-fill some fields if we have the data
                 let defaultValue = '';
                 if (field.name === 'businessType' && step1Data.businessType) {
@@ -511,6 +514,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
                         />
                     );
                   default:
+                    console.log('Unknown field type:', field.type, 'for field:', field.name);
                     return null;
                 }
               });
