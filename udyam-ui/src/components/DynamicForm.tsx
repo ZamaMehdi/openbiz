@@ -496,22 +496,24 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, className = '' }) => 
                 
                 switch (field.type) {
                   case 'text':
+                  case 'textarea':
+                  case 'email':
                     return (
-                                              <TextField
-                          key={field.name}
-                          field={field}
-                          control={control}
-                          error={errors[field.name as string] as any}
-                        />
+                      <TextField
+                        key={field.name}
+                        field={field}
+                        control={control}
+                        error={errors[field.name as string] as any}
+                      />
                     );
                   case 'select':
                     return (
-                                              <SelectField
-                          key={field.name}
-                          field={field}
-                          control={control}
-                          error={errors[field.name as string] as any}
-                        />
+                      <SelectField
+                        key={field.name}
+                        field={field}
+                        control={control}
+                        error={errors[field.name as string] as any}
+                      />
                     );
                   default:
                     console.log('Unknown field type:', field.type, 'for field:', field.name);
